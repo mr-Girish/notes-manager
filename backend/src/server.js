@@ -1,13 +1,16 @@
-const express = require('express')
-const cors = require('cors')
-require('dotenv').config()
+const express = require('express');
+const cors = require('cors');
 
-const app = express()
-app.use(cors())
+const notesRoutes = require('./routes/notes');
 
-app.use(express.json)
+const app = express();
 
-app.listen(PORT ,()=>{
-      console.log(`Server running on port ${PORT}`);
+app.use(cors());              // allow cross-origin
+app.use(express.json());      // ✅ parses incoming JSON bodies
 
-})
+app.use('/api/notes', notesRoutes);
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

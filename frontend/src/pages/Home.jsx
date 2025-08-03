@@ -20,12 +20,13 @@ const Home = () => {
     fetchNotes();
   }, []);
 
+  console.log("notestestst",notes)
   return (
     <div>
       <h2>All Notes</h2>
       <Link to="/create">+ Create Note</Link>
       {notes.map((note) => (
-        <NoteCard key={note._id} note={note} onDelete={deleteNote} />
+        <NoteCard key={note.id} note={note} onDelete={deleteNote} />
       ))}
     </div>
   );
