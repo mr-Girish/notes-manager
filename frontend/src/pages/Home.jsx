@@ -1,32 +1,35 @@
-import { useEffect, useState } from 'react';
-import NoteCard from '../components/NoteCard';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import API from '../services/api';
+
+import NoteCard from '../components/NoteCard';
+import { fetchNotes } from '../redux/features/notes/noteSlice';
+import { deleteNote } from '../services/notesService';
+// import { fetchNotes, deleteNote } from '../redux/features/notes/notesSlice';
 
 const Home = () => {
-  const [notes, setNotes] = useState([]);
+  const dispatch = useDispatch();
 
-  const fetchNotes = async () => {
-    const res = await API.get('/notes');
-    setNotes(res.data);
-  };
-
-  const deleteNote = async (id) => {
-    await API.delete(`/notes/${id}`);
-    fetchNotes();
-  };
+  const { notes, loading, error } = useSelector((state) => state.notes);
 
   useEffect(() => {
-    fetchNotes();
-  }, []);
+    dispatch(fetchNotes());
+  }, [dispatch]);
 
-  console.log("notestestst",notes)
+  const handleDelete = (id) => {
+    dispatch(deleteNote(id));
+  };
+
   return (
     <div>
       <h2>All Notes</h2>
       <Link to="/create">+ Create Note</Link>
+
+      {loading && <p>Loading notes...</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
       {notes.map((note) => (
-        <NoteCard key={note.id} note={note} onDelete={deleteNote} />
+        <NoteCard key={note.id} note={note} onDelete={handleDelete} />
       ))}
     </div>
   );
